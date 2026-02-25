@@ -283,6 +283,23 @@ input[type=range]::-moz-range-thumb {
   transition:all 0.15s;
 }
 .bottom-main-btn:hover { background:rgba(167,139,250,0.28); }
+.bottom-share-btn {
+  min-width:120px;
+  padding:9px 12px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,0.2);
+  background:rgba(255,255,255,0.08);
+  color:#ffffff;
+  font-size:10px;
+  letter-spacing:0.06em;
+  text-transform:uppercase;
+  cursor:pointer;
+  transition:all 0.15s;
+}
+.bottom-share-btn:hover {
+  background:rgba(255,255,255,0.15);
+  border-color:rgba(255,255,255,0.34);
+}
 .bottom-link-btn {
   display:inline-flex;
   align-items:center;
@@ -614,6 +631,7 @@ input[type=range]::-moz-range-thumb {
   #sidebar-right { order:3; }
   #canvas-bottom-controls { bottom:10px; }
   .bottom-main-btn { min-width:128px; padding:8px 12px; }
+  .bottom-share-btn { min-width:102px; padding:8px 10px; font-size:9px; }
   .bottom-link-btn { min-width:148px; padding:8px 12px; }
   #hud-sticky { right:10px; bottom:10px; }
 }
@@ -717,6 +735,7 @@ input[type=range]::-moz-range-thumb {
       </button>
       <div id="rec-dot"></div>
       <button class="bottom-main-btn" id="open-export-modal">Export</button>
+      <button class="bottom-share-btn" id="share-link-btn" type="button">Share Link</button>
       <a class="bottom-link-btn" href="https://buymeacoffee.com/merttoker" target="_blank" rel="noopener noreferrer">☕ Buy me a coffee</a>
     </div>
   </div>
@@ -819,12 +838,12 @@ input[type=range]::-moz-range-thumb {
         </select>
       </div>
       <div class="slider-wrap">
-        <div class="slider-header"><span class="slider-label">Light Brightness</span><span class="slider-val" id="lightBrightness-val">0.5</span></div>
-        <input type="range" id="lightBrightness" min="0" max="2" step="0.1" value="0.5">
+        <div class="slider-header"><span class="slider-label">Light Brightness</span><span class="slider-val" id="lightBrightness-val">0.3</span></div>
+        <input type="range" id="lightBrightness" min="0" max="2" step="0.1" value="0.3">
       </div>
       <div class="slider-wrap">
-        <div class="slider-header"><span class="slider-label">Light Scale</span><span class="slider-val" id="lightScale-val">1.0</span></div>
-        <input type="range" id="lightScale" min="1" max="20" step="0.5" value="1.0">
+        <div class="slider-header"><span class="slider-label">Light Scale</span><span class="slider-val" id="lightScale-val">2.0</span></div>
+        <input type="range" id="lightScale" min="1" max="20" step="0.5" value="2.0">
       </div>
     </div>
 
@@ -834,12 +853,12 @@ input[type=range]::-moz-range-thumb {
     <div class="sec">
       <div class="sec-label">Shape & Motion</div>
       <div class="slider-wrap">
-        <div class="slider-header"><span class="slider-label">Flow Speed</span><span class="slider-val" id="speed-val">0.6</span></div>
-        <input type="range" id="speed" min="0" max="2" step="0.05" value="0.6">
+        <div class="slider-header"><span class="slider-label">Flow Speed</span><span class="slider-val" id="speed-val">0.5</span></div>
+        <input type="range" id="speed" min="0" max="2" step="0.05" value="0.5">
       </div>
       <div class="slider-wrap">
-        <div class="slider-header"><span class="slider-label">Distortion</span><span class="slider-val" id="distortion-val">0.30</span></div>
-        <input type="range" id="distortion" min="0" max="0.8" step="0.01" value="0.30">
+        <div class="slider-header"><span class="slider-label">Distortion</span><span class="slider-val" id="distortion-val">0.3</span></div>
+        <input type="range" id="distortion" min="0" max="0.8" step="0.01" value="0.3">
       </div>
       <div class="slider-wrap">
         <div class="slider-header"><span class="slider-label">Turbulence</span><span class="slider-val" id="turbulence-val">0.0</span></div>
@@ -1694,7 +1713,7 @@ applySceneBackground(sceneBgColor);
 // ── Uniforms ─────────────────────────────────────────────
 const uniforms = {
   uTime:             { value:0 },
-  uDistortion:       { value:0.20 },
+  uDistortion:       { value:0.30 },
   uTurbulence:       { value:0.0 },
   uDispAmp:          { value:1.0 },
   uStyle:            { value:0.0 },
@@ -1708,8 +1727,8 @@ const uniforms = {
   uFresnelDir:       { value:new THREE.Vector3(1, 0, 0) },
   uLightMode:        { value:0.0 },
   uLightDir:         { value:new THREE.Vector3(1, 0, 0) },
-  uLightBrightness:  { value:0.5 },
-  uLightScale:       { value:1.0 },
+  uLightBrightness:  { value:0.3 },
+  uLightScale:       { value:2.0 },
   uNoiseIntensity:   { value:0.0 },
   uNoiseScale:       { value:15.0 },
   uFilamentIntensity:{ value:0.0 },
@@ -2089,7 +2108,7 @@ function syncMeshRotation(dt){
 
 // ── State ────────────────────────────────────────────────
 let isPlaying = true;
-let speedMult = 0.6;
+let speedMult = 0.5;
 let autoRotate = true;
 const clock = new THREE.Clock();
 
@@ -2157,7 +2176,11 @@ document.getElementById('ultraSharpToggle').addEventListener('change', e => {
 // ── Dynamic color palette system ─────────────────────────
 const MAX_COLORS = 12;
 const MIN_COLORS = 2;
-let paletteColors = ['#38bdf8','#a78bfa','#f472b6','#c4f0ff','#7ee8fa']; // default: Pearl theme
+const DEFAULT_THEME_ID = 'lava';
+function getThemeById(themeId){
+  return THEMES.find(t => t.id === themeId) || null;
+}
+let paletteColors = [...((getThemeById(DEFAULT_THEME_ID) || THEMES[0]).colors)];
 
 function syncColorsToShader(){
   const n = paletteColors.length;
@@ -2184,7 +2207,7 @@ function renderColorGrid(){
     input.addEventListener('input', e => {
       paletteColors[idx] = e.target.value;
       syncColorsToShader();
-      document.querySelectorAll('#theme-grid .theme-btn').forEach(b=>b.classList.remove('active'));
+      setActiveThemeButton(null);
     });
 
     // Remove button (only if more than MIN_COLORS)
@@ -2198,7 +2221,7 @@ function renderColorGrid(){
       paletteColors.splice(idx, 1);
       syncColorsToShader();
       renderColorGrid();
-      document.querySelectorAll('#theme-grid .theme-btn').forEach(b=>b.classList.remove('active'));
+      setActiveThemeButton(null);
     });
 
     item.appendChild(label);
@@ -2230,37 +2253,49 @@ function renderColorGrid(){
   }
 }
 
+function setActiveThemeButton(themeId){
+  document.querySelectorAll('#theme-grid .theme-btn').forEach(b => {
+    b.classList.toggle('active', !!themeId && b.dataset.themeId === themeId);
+  });
+}
+
+function applyThemeById(themeId, options = {}){
+  const theme = getThemeById(themeId);
+  if(!theme) return false;
+  setActiveThemeButton(theme.id);
+  paletteColors = [...theme.colors];
+  syncColorsToShader();
+  renderColorGrid();
+  if(options.forceGradient && theme.id === 'iridescent'){
+    const sel = document.getElementById('gradientType');
+    if(sel){
+      sel.value = 'fluid';
+      sel.dispatchEvent(new Event('change'));
+    }
+  }
+  return true;
+}
+
 // ── Theme buttons — build dynamically ─────────────────────
 function buildThemeGrid(){
   const grid = document.getElementById('theme-grid');
   grid.innerHTML = '';
-  THEMES.forEach((t, i) => {
+  THEMES.forEach((t) => {
     const btn = document.createElement('button');
-    btn.className = 'theme-btn' + (i === 0 ? ' active' : '');
+    btn.className = 'theme-btn' + (t.id === DEFAULT_THEME_ID ? ' active' : '');
     btn.dataset.themeId = t.id;
     btn.innerHTML = `
       <div class="theme-swatch" style="background:${t.swatch}"></div>
       <span>${t.name}</span>`;
     btn.addEventListener('click', () => {
-      document.querySelectorAll('#theme-grid .theme-btn').forEach(b=>b.classList.remove('active'));
-      btn.classList.add('active');
-      paletteColors = [...t.colors];
-      syncColorsToShader();
-      renderColorGrid();
-      // Auto-switch to Fluid Glass when Pearl theme is selected
-      if(t.id === 'iridescent'){
-        const sel = document.getElementById('gradientType');
-        sel.value = 'fluid';
-        sel.dispatchEvent(new Event('change'));
-      }
+      applyThemeById(t.id, { forceGradient: true });
     });
     grid.appendChild(btn);
   });
 }
 
 buildThemeGrid();
-renderColorGrid();
-syncColorsToShader();
+applyThemeById(DEFAULT_THEME_ID);
 document.getElementById('theme-random-btn').addEventListener('click', () => {
   const randomColor = () => {
     const h = Math.floor(Math.random() * 360);
@@ -2283,7 +2318,7 @@ document.getElementById('theme-random-btn').addEventListener('click', () => {
   paletteColors = Array.from({ length: count }, randomColor);
   syncColorsToShader();
   renderColorGrid();
-  document.querySelectorAll('#theme-grid .theme-btn').forEach(b=>b.classList.remove('active'));
+  setActiveThemeButton(null);
   toast('Random palette generated.');
 });
 
@@ -2497,6 +2532,7 @@ const codeOutput = document.getElementById('code-output');
 const codePreviewImage = document.getElementById('code-preview-image');
 const codeLoopNote = document.getElementById('code-loop-note');
 const codeBehaviorNote = document.getElementById('code-behavior-note');
+const shareLinkBtn = document.getElementById('share-link-btn');
 exportScaleSelect = document.getElementById('exportScale');
 exportScalePixelsEl = document.getElementById('exportScalePixels');
 let selectedVideoFormat = 'webm';
@@ -2507,6 +2543,271 @@ let codePreviewRafId = 0;
 let codePreviewLastMs = 0;
 let codeLoopSeconds = 0;
 let codeTimeSpeed = 1;
+
+function toNumber(value, fallback){
+  const n = parseFloat(value);
+  return Number.isFinite(n) ? n : fallback;
+}
+
+function clampValue(value, min, max){
+  return Math.max(min, Math.min(max, value));
+}
+
+function applyRangeValue(id, value){
+  const input = document.getElementById(id);
+  if(!input) return;
+  const min = toNumber(input.min, Number.NEGATIVE_INFINITY);
+  const max = toNumber(input.max, Number.POSITIVE_INFINITY);
+  const next = clampValue(toNumber(value, toNumber(input.value, 0)), min, max);
+  input.value = String(next);
+  input.dispatchEvent(new Event('input', { bubbles: true }));
+}
+
+function applySelectValue(id, value){
+  const select = document.getElementById(id);
+  if(!select || value == null) return;
+  const allowed = Array.from(select.options).map(o => o.value);
+  if(!allowed.includes(String(value))) return;
+  select.value = String(value);
+  select.dispatchEvent(new Event('change', { bubbles: true }));
+}
+
+function applyCheckboxValue(id, checked, dispatch = true){
+  const input = document.getElementById(id);
+  if(!input || typeof checked !== 'boolean') return;
+  input.checked = checked;
+  if(dispatch){
+    input.dispatchEvent(new Event('change', { bubbles: true }));
+  }
+}
+
+function encodeShareState(state){
+  const json = JSON.stringify(state);
+  const bytes = new TextEncoder().encode(json);
+  let binary = '';
+  bytes.forEach(byte => { binary += String.fromCharCode(byte); });
+  return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
+}
+
+function decodeShareState(encoded){
+  const base64 = encoded.replace(/-/g, '+').replace(/_/g, '/');
+  const padded = base64 + '==='.slice((base64.length + 3) % 4);
+  const binary = atob(padded);
+  const bytes = new Uint8Array(binary.length);
+  for(let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+  const json = new TextDecoder().decode(bytes);
+  return JSON.parse(json);
+}
+
+function getShareStateFromUrl(){
+  const hash = window.location.hash || '';
+  if(!hash.startsWith('#s=')) return null;
+  const payload = hash.slice(3).trim();
+  if(!payload) return null;
+  try{
+    return decodeShareState(payload);
+  }catch(_){
+    return null;
+  }
+}
+
+function getActiveThemeId(){
+  const btn = document.querySelector('#theme-grid .theme-btn.active');
+  return btn ? btn.dataset.themeId || null : null;
+}
+
+function getActiveMaterialPreset(){
+  const btn = document.querySelector('.mat-btn.active');
+  return btn ? btn.dataset.mat || 'glossy' : 'glossy';
+}
+
+function captureShareState(){
+  return {
+    v: 1,
+    shape: currentShape,
+    themeId: getActiveThemeId(),
+    palette: [...paletteColors],
+    baseColor: document.getElementById('baseColor').value,
+    colorOpacity: uniforms.uColorOpacity.value,
+    bgColor: sceneBgColor,
+    pngTransparent: !!document.getElementById('pngTransparent').checked,
+    gradientType: document.getElementById('gradientType').value,
+    colorWarp: uniforms.uColorWarp.value,
+    linearFluidity: uniforms.uLinearFluidity.value,
+    clarity: uniforms.uClarity.value,
+    ultraSharp: uniforms.uUltraSharp.value > 0.5,
+    fresnelIntensity: uniforms.uFresnelIntensity.value,
+    fresnelMode: document.getElementById('fresnelMode').value,
+    fresnelDirection: document.getElementById('fresnelDirection').value,
+    lightBrightness: uniforms.uLightBrightness.value,
+    lightScale: uniforms.uLightScale.value,
+    speed: speedMult,
+    distortion: uniforms.uDistortion.value,
+    turbulence: uniforms.uTurbulence.value,
+    autoRotate: autoRotate,
+    isPlaying: isPlaying,
+    geometryQuality: geometryQuality,
+    materialPreset: getActiveMaterialPreset(),
+    roughness: uniforms.uRoughness.value,
+    metallic: uniforms.uMetallic.value,
+    specPow: uniforms.uSpecPow.value,
+    fuzzyIntensity: uniforms.uFuzzyIntensity.value,
+    metallicLayer: uniforms.uMetallicLayer.value > 0.5,
+    envStrength: uniforms.uEnvStrength.value,
+    aniso: uniforms.uAniso.value,
+    fluidSwirl: uniforms.uFluidSwirl.value,
+    thinFilm: uniforms.uThinFilm.value,
+    chromaticAb: uniforms.uChromaticAb.value,
+    foldLines: uniforms.uFoldLines.value,
+    sharpness: uniforms.uSharpness.value,
+    smoothMix: uniforms.uSmoothMix.value,
+    bandScale: uniforms.uBandScale.value,
+    sharpDrift: uniforms.uSharpDrift.value,
+    filamentIntensity: uniforms.uFilamentIntensity.value,
+    filamentScale: uniforms.uFilamentScale.value,
+    topoIntensity: uniforms.uTopoIntensity.value,
+    topoFreq: uniforms.uTopoFreq.value,
+    rippleIntensity: uniforms.uRippleIntensity.value,
+    rippleFreq: uniforms.uRippleFreq.value,
+    noiseIntensity: uniforms.uNoiseIntensity.value,
+    noiseScale: uniforms.uNoiseScale.value,
+  };
+}
+
+function applyShareState(state){
+  if(!state || typeof state !== 'object') return false;
+
+  if(typeof state.shape === 'string'){
+    const shapeBtn = document.querySelector(`.shape-btn[data-shape="${state.shape}"]`);
+    if(shapeBtn) shapeBtn.click();
+  }
+
+  if(Array.isArray(state.palette) && state.palette.length >= MIN_COLORS && state.palette.length <= MAX_COLORS){
+    paletteColors = state.palette
+      .map(v => String(v || '').trim())
+      .filter(v => /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(v));
+    if(paletteColors.length >= MIN_COLORS){
+      syncColorsToShader();
+      renderColorGrid();
+    }
+  }
+
+  if(typeof state.themeId === 'string' && getThemeById(state.themeId)){
+    setActiveThemeButton(state.themeId);
+  } else {
+    setActiveThemeButton(null);
+  }
+
+  if(typeof state.baseColor === 'string'){
+    const input = document.getElementById('baseColor');
+    input.value = state.baseColor;
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+  }
+  applyRangeValue('colorOpacity', state.colorOpacity);
+
+  if(typeof state.bgColor === 'string'){
+    const input = document.getElementById('bgColor');
+    input.value = state.bgColor;
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+  }
+  applyCheckboxValue('pngTransparent', !!state.pngTransparent, true);
+
+  applySelectValue('gradientType', state.gradientType);
+  applyRangeValue('colorWarp', state.colorWarp);
+  applyRangeValue('linearFluidity', state.linearFluidity);
+  applyRangeValue('clarity', state.clarity);
+  applyRangeValue('fresnelIntensity', state.fresnelIntensity);
+  applySelectValue('fresnelMode', state.fresnelMode);
+  applySelectValue('fresnelDirection', state.fresnelDirection);
+  applyRangeValue('lightBrightness', state.lightBrightness);
+  applyRangeValue('lightScale', state.lightScale);
+  applyRangeValue('speed', state.speed);
+  applyRangeValue('distortion', state.distortion);
+  applyRangeValue('turbulence', state.turbulence);
+
+  applyRangeValue('fluidSwirl', state.fluidSwirl);
+  applyRangeValue('thinFilm', state.thinFilm);
+  applyRangeValue('chromaticAb', state.chromaticAb);
+  applyRangeValue('foldLines', state.foldLines);
+
+  applyRangeValue('sharpness', state.sharpness);
+  applyRangeValue('smoothMix', state.smoothMix);
+  applyRangeValue('bandScale', state.bandScale);
+  applyRangeValue('sharpDrift', state.sharpDrift);
+
+  applyRangeValue('filamentIntensity', state.filamentIntensity);
+  applyRangeValue('filamentScale', state.filamentScale);
+  applyRangeValue('topoIntensity', state.topoIntensity);
+  applyRangeValue('topoFreq', state.topoFreq);
+  applyRangeValue('rippleIntensity', state.rippleIntensity);
+  applyRangeValue('rippleFreq', state.rippleFreq);
+  applyRangeValue('noiseIntensity', state.noiseIntensity);
+  applyRangeValue('noiseScale', state.noiseScale);
+
+  if(typeof state.materialPreset === 'string'){
+    const btn = document.querySelector(`.mat-btn[data-mat="${state.materialPreset}"]`);
+    if(btn) btn.click();
+  }
+  applyRangeValue('roughness', state.roughness);
+  applyRangeValue('metallic', state.metallic);
+  applyRangeValue('specPow', state.specPow);
+  applyRangeValue('fuzzyIntensity', state.fuzzyIntensity);
+  applyRangeValue('envStrength', state.envStrength);
+  applyRangeValue('aniso', state.aniso);
+  applyCheckboxValue('metallic-toggle', !!state.metallicLayer, true);
+
+  const ultraSharpToggle = document.getElementById('ultraSharpToggle');
+  if(typeof state.ultraSharp === 'boolean' && ultraSharpToggle){
+    ultraSharpToggle.checked = state.ultraSharp;
+    uniforms.uUltraSharp.value = state.ultraSharp ? 1.0 : 0.0;
+  }
+
+  applyCheckboxValue('rotate-toggle', !!state.autoRotate, true);
+
+  if(typeof state.geometryQuality === 'string' && GEO_QUALITY_PROFILES[state.geometryQuality]){
+    const qualitySelect = document.getElementById('geoQuality');
+    qualitySelect.value = state.geometryQuality;
+    geometryQuality = state.geometryQuality;
+    setShape(currentShape);
+  }
+
+  if(typeof state.isPlaying === 'boolean' && state.isPlaying !== isPlaying){
+    togglePlayback();
+  }
+  return true;
+}
+
+async function copyShareLink(){
+  const state = captureShareState();
+  let encoded = '';
+  try{
+    encoded = encodeShareState(state);
+  }catch(_){
+    toast('Could not generate share link.');
+    return;
+  }
+  const shareUrl = `${window.location.origin}${window.location.pathname}${window.location.search}#s=${encoded}`;
+  try{
+    if(navigator.clipboard?.writeText){
+      await navigator.clipboard.writeText(shareUrl);
+    } else {
+      throw new Error('Clipboard unavailable');
+    }
+  }catch(_){
+    const ta = document.createElement('textarea');
+    ta.value = shareUrl;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    ta.remove();
+  }
+  toast('Share link copied.');
+  trackEvent('share_link_copied', {
+    shape: state.shape,
+    gradientType: state.gradientType,
+    paletteSize: Array.isArray(state.palette) ? state.palette.length : 0
+  });
+}
 
 function setExportModalOpen(open){
   exportModal.classList.toggle('open', open);
@@ -2569,6 +2870,11 @@ exportTabButtons.forEach(btn => {
   btn.addEventListener('click', () => setExportTab(btn.dataset.exportTab));
 });
 setExportTab('video');
+if(shareLinkBtn){
+  shareLinkBtn.addEventListener('click', () => {
+    copyShareLink();
+  });
+}
 videoFormatChipButtons.forEach(btn => {
   btn.addEventListener('click', () => {
     activateChip(videoFormatChipButtons, btn);
@@ -3267,6 +3573,16 @@ recBtn.addEventListener('click', () => {
   }
   startRecording();
 });
+
+const sharedState = getShareStateFromUrl();
+if(sharedState){
+  if(applyShareState(sharedState)){
+    toast('Shared preset loaded.');
+    trackEvent('share_link_loaded', { shape: currentShape });
+  } else {
+    toast('Could not load shared preset.');
+  }
+}
 </script>
 </body>
 </html>
