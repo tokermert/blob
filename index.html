@@ -283,6 +283,27 @@ input[type=range]::-moz-range-thumb {
   transition:all 0.15s;
 }
 .bottom-main-btn:hover { background:rgba(167,139,250,0.28); }
+.bottom-link-btn {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  min-width:166px;
+  padding:9px 14px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,0.16);
+  background:rgba(255,255,255,0.06);
+  color:#ffffff;
+  font-size:11px;
+  letter-spacing:0.02em;
+  text-decoration:none;
+  cursor:pointer;
+  transition:all 0.15s;
+}
+.bottom-link-btn:hover {
+  background:rgba(255,255,255,0.12);
+  border-color:rgba(255,255,255,0.28);
+}
 #canvas-bottom-controls #rec-dot { margin-left:0; }
 
 #export-modal {
@@ -593,6 +614,7 @@ input[type=range]::-moz-range-thumb {
   #sidebar-right { order:3; }
   #canvas-bottom-controls { bottom:10px; }
   .bottom-main-btn { min-width:128px; padding:8px 12px; }
+  .bottom-link-btn { min-width:148px; padding:8px 12px; }
   #hud-sticky { right:10px; bottom:10px; }
 }
 </style>
@@ -695,6 +717,7 @@ input[type=range]::-moz-range-thumb {
       </button>
       <div id="rec-dot"></div>
       <button class="bottom-main-btn" id="open-export-modal">Export</button>
+      <a class="bottom-link-btn" href="https://buymeacoffee.com/merttoker" target="_blank" rel="noopener noreferrer">☕ Buy me a coffee</a>
     </div>
   </div>
 
