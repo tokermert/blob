@@ -2,3 +2,9 @@
 .claude/
 backups/
 threejs-starter/
+node_modules/
+.next/
+out/
+dist/
+coverage/
+*.log
