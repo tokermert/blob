@@ -181,17 +181,11 @@ export default function HomePage() {
 
       <section className="px-5 py-12 sm:px-8">
         <Reveal className="mx-auto w-full max-w-[1200px] rounded-[30px] border border-zinc-800/80 bg-surface/90 p-6 text-center shadow-[0_0_0_1px_rgba(255,255,255,0.015)] sm:p-8 lg:p-10">
-          <video
-            className="mx-auto mb-6 block w-full max-w-[420px] rounded-2xl border border-zinc-800/80 bg-black/80"
-            autoPlay
-            loop
-            muted
-            playsInline
-            preload="metadata"
-            aria-label="Try it preview"
-          >
-            <source src="/videos/try-it.webm" type="video/webm" />
-          </video>
+          <img
+            className="mx-auto mb-6 block w-full max-w-[420px] rounded-2xl bg-black/80"
+            src="/images/try-it.png"
+            alt="Try it preview"
+          />
           <h2 className="text-2xl font-medium tracking-[-0.03em] text-zinc-100 sm:text-3xl">
             Free forever · Runs in your browser · No account
           </h2>
