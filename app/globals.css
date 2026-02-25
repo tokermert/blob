@@ -218,7 +218,7 @@ body {
 
 .showcase-item {
   position: relative;
-  min-height: clamp(330px, 36vw, 560px);
+  min-height: clamp(231px, 25vw, 392px);
   aspect-ratio: 1 / 1;
   margin: 0;
   display: grid;
@@ -307,7 +307,7 @@ body {
   }
 
   .showcase-item {
-    min-height: clamp(250px, 72vw, 420px);
+    min-height: clamp(175px, 50vw, 294px);
   }
 
   .showcase-video {

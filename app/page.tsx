@@ -151,7 +151,7 @@ export default function HomePage() {
         </Reveal>
       </section>
 
-      <section id="examples" className="px-5 py-12 sm:px-8">
+      <section id="examples" className="px-5 py-0 sm:px-8">
         <Reveal className="mx-auto w-full max-w-[1400px]">
           <div className="showcase-grid">
             {showcaseVideos.map((src, index) => (
