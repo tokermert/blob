@@ -138,6 +138,8 @@ html, body { width:100%; height:100%; overflow:hidden; background:var(--bg); fon
 
 /* ── Theme swatches ── */
 .theme-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:5px; }
+.theme-actions { display:flex; gap:6px; margin-top:6px; }
+.theme-actions .btn { padding:7px 6px; font-size:9px; }
 .theme-btn {
   padding:7px 5px; border-radius:9px; border:1px solid var(--panel-border);
   background:var(--panel-bg); cursor:pointer; display:flex; flex-direction:column;
@@ -616,17 +618,9 @@ input[type=range]::-moz-range-thumb {
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="4" width="16" height="16" rx="4"/></svg>
           <span>Cube</span>
         </button>
-        <button class="shape-btn" data-shape="rtablet" title="Rounded Tablet">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="7" width="18" height="10" rx="5"/></svg>
-          <span>Pill</span>
-        </button>
         <button class="shape-btn" data-shape="torus" title="Torus">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><ellipse cx="12" cy="12" rx="9" ry="4"/><ellipse cx="12" cy="12" rx="3.5" ry="1.5"/></svg>
           <span>Ring</span>
-        </button>
-        <button class="shape-btn" data-shape="egg" title="Egg">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><ellipse cx="12" cy="13" rx="7" ry="9"/></svg>
-          <span>Egg</span>
         </button>
         <button class="shape-btn" data-shape="capsule" title="Capsule">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="8" y="3" width="8" height="18" rx="4"/></svg>
@@ -663,6 +657,17 @@ input[type=range]::-moz-range-thumb {
     <div class="sec">
       <div class="sec-label">Theme</div>
       <div class="theme-grid" id="theme-grid"></div>
+      <div class="theme-actions">
+        <button class="btn" id="theme-random-btn" type="button">Random</button>
+      </div>
+    </div>
+
+    <!-- COLORS -->
+    <div class="sec">
+      <div class="sec-label">Color Palette</div>
+      <div class="color-grid" id="color-grid">
+        <!-- filled dynamically by JS -->
+      </div>
     </div>
 
     <!-- BASE COLOR -->
@@ -694,14 +699,6 @@ input[type=range]::-moz-range-thumb {
             <label class="toggle"><input type="checkbox" id="pngTransparent"><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
           </div>
         </div>
-      </div>
-    </div>
-
-    <!-- COLORS -->
-    <div class="sec">
-      <div class="sec-label">Color Palette</div>
-      <div class="color-grid" id="color-grid">
-        <!-- filled dynamically by JS -->
       </div>
     </div>
 
@@ -789,6 +786,13 @@ input[type=range]::-moz-range-thumb {
         <span class="toggle-label">Ultra Sharp (f22)</span>
         <label class="toggle"><input type="checkbox" id="ultraSharpToggle"><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
       </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- LIGHT -->
+    <div class="sec">
+      <div class="sec-label">Light</div>
       <div class="slider-wrap">
         <div class="slider-header"><span class="slider-label">Fresnel Edge</span><span class="slider-val" id="fresnel-val">0.5</span></div>
         <input type="range" id="fresnelIntensity" min="0" max="2" step="0.05" value="0.5">
@@ -818,24 +822,6 @@ input[type=range]::-moz-range-thumb {
       <div class="slider-wrap">
         <div class="slider-header"><span class="slider-label">Light Scale</span><span class="slider-val" id="lightScale-val">5.0</span></div>
         <input type="range" id="lightScale" min="1" max="20" step="0.5" value="5.0">
-      </div>
-      <div class="slider-wrap">
-        <div class="slider-header"><span class="slider-label">Light Distribution</span></div>
-        <select class="styled-select" id="lightMode">
-          <option value="all" selected>All Around (Balanced)</option>
-          <option value="directional">Directional (One Side)</option>
-        </select>
-      </div>
-      <div class="slider-wrap" id="lightDirectionWrap" style="display:none;">
-        <div class="slider-header"><span class="slider-label">Light Direction</span></div>
-        <select class="styled-select" id="lightDirection">
-          <option value="right" selected>Right</option>
-          <option value="left">Left</option>
-          <option value="top">Top</option>
-          <option value="bottom">Bottom</option>
-          <option value="front">Front</option>
-          <option value="back">Back</option>
-        </select>
       </div>
     </div>
 
@@ -877,15 +863,6 @@ input[type=range]::-moz-range-thumb {
         <button class="mat-btn" data-mat="metallic">
           <span class="mat-icon">◈</span><span>Metal</span>
         </button>
-        <button class="mat-btn" data-mat="plastic">
-          <span class="mat-icon">◎</span><span>Plastic</span>
-        </button>
-        <button class="mat-btn" data-mat="fuzzy">
-          <span class="mat-icon">❋</span><span>Fuzzy</span>
-        </button>
-        <button class="mat-btn" data-mat="ceramic">
-          <span class="mat-icon">◌</span><span>Ceramic</span>
-        </button>
       </div>
       <!-- Fine-tune sliders -->
       <div class="slider-wrap">
@@ -904,18 +881,20 @@ input[type=range]::-moz-range-thumb {
         <div class="slider-header"><span class="slider-label">Fuzz / Velvet</span><span class="slider-val" id="fuzzy-val">0.0</span></div>
         <input type="range" id="fuzzyIntensity" min="0" max="1" step="0.01" value="0">
       </div>
-      <div class="toggle-row" style="margin-top:4px;">
-        <span class="toggle-label">✦ Metallic Layer</span>
-        <label class="toggle"><input type="checkbox" id="metallic-toggle"><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
-      </div>
-      <div id="metallic-controls" style="display:none; margin-top:8px;">
-        <div class="slider-wrap">
-          <div class="slider-header"><span class="slider-label" style="color:#fbbf24;">Envmap Strength</span><span class="slider-val" id="envStrength-val">0.6</span></div>
-          <input type="range" id="envStrength" min="0" max="1" step="0.01" value="0.6">
+      <div id="metallic-layer-wrap" style="display:none;">
+        <div class="toggle-row" style="margin-top:4px;">
+          <span class="toggle-label">✦ Metallic Layer</span>
+          <label class="toggle"><input type="checkbox" id="metallic-toggle"><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
         </div>
-        <div class="slider-wrap">
-          <div class="slider-header"><span class="slider-label" style="color:#fbbf24;">Anisotropy</span><span class="slider-val" id="aniso-val">0.5</span></div>
-          <input type="range" id="aniso" min="0" max="1" step="0.01" value="0.5">
+        <div id="metallic-controls" style="display:none; margin-top:8px;">
+          <div class="slider-wrap">
+            <div class="slider-header"><span class="slider-label" style="color:#fbbf24;">Envmap Strength</span><span class="slider-val" id="envStrength-val">0.6</span></div>
+            <input type="range" id="envStrength" min="0" max="1" step="0.01" value="0.6">
+          </div>
+          <div class="slider-wrap">
+            <div class="slider-header"><span class="slider-label" style="color:#fbbf24;">Anisotropy</span><span class="slider-val" id="aniso-val">0.5</span></div>
+            <input type="range" id="aniso" min="0" max="1" step="0.01" value="0.5">
+          </div>
         </div>
       </div>
     </div>
@@ -1044,16 +1023,24 @@ input[type=range]::-moz-range-thumb {
         </div>
       </div>
       <div class="slider-wrap">
+        <div class="slider-header"><span class="slider-label">Video Resolution</span></div>
+        <div class="chip-group" id="video-res-chips">
+          <button class="chip active" data-video-res="source">Source</button>
+          <button class="chip" data-video-res="2k">2K</button>
+          <button class="chip" data-video-res="4k">4K</button>
+        </div>
+      </div>
+      <div class="slider-wrap">
         <div class="slider-header"><span class="slider-label">Video Duration</span><span class="slider-val" id="videoDuration-val">8.0s</span></div>
         <input type="range" id="videoDuration" min="2" max="20" step="0.5" value="8">
       </div>
       <div class="slider-wrap">
         <div class="slider-header"><span class="slider-label">Video FPS</span><span class="slider-val" id="videoFps-val">60</span></div>
-        <input type="range" id="videoFps" min="24" max="60" step="1" value="60">
+        <input type="range" id="videoFps" min="24" max="120" step="1" value="60">
       </div>
       <div class="slider-wrap">
-        <div class="slider-header"><span class="slider-label">Video Mbps</span><span class="slider-val" id="videoBitrate-val">8.0</span></div>
-        <input type="range" id="videoBitrate" min="2" max="20" step="0.5" value="8">
+        <div class="slider-header"><span class="slider-label">Video Mbps</span><span class="slider-val" id="videoBitrate-val">12.0</span></div>
+        <input type="range" id="videoBitrate" min="2" max="40" step="0.5" value="12">
       </div>
       <div class="export-action">
         <button class="btn primary" id="export-video">Record & Download Video</button>
@@ -1119,6 +1106,12 @@ input[type=range]::-moz-range-thumb {
 
 <div id="toast"></div>
 
+<script>
+window.va = window.va || function(){ (window.vaq = window.vaq || []).push(arguments); };
+window.si = window.si || function(){ (window.siq = window.siq || []).push(arguments); };
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
+<script defer src="/_vercel/speed-insights/script.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://unpkg.com/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 <script>
@@ -1412,10 +1405,19 @@ const fragmentShader = `
       colorT = clamp(radial + warpN*uColorWarp, 0.0, 1.0);
 
     } else if(uGradientType < 2.5){
-      // ── Fluid Glass ──────────────────────────────────────
-      float fluid = fluidColorT(vPosition, uTime, max(uFluidSwirl, 0.5));
-      float warp2 = snoise(vPosition*3.5 + uTime*0.18) * uColorWarp * 0.5;
-      colorT = clamp(fluid + warp2, 0.0, 1.0);
+      // ── Fluid Glass (Linear Fluidity: 0=linear, 1=fluid) ─
+      float fluidity = clamp(uLinearFluidity, 0.0, 1.0);
+      float baseLinear = vPosition.y * 0.5 + 0.5;
+      float axialTilt = (vPosition.x + vPosition.z) * 0.08;
+      float linearNoise = fbm3(vPosition * 1.05 + vec3(uTime * 0.03, -uTime * 0.02, uTime * 0.02)) * 0.05;
+      float linearField = clamp(baseLinear + axialTilt + linearNoise, 0.0, 1.0);
+
+      float swirl = mix(0.35, max(uFluidSwirl, 0.5), fluidity);
+      float fluid = fluidColorT(vPosition, uTime, swirl);
+      float mixAmt = pow(fluidity, 1.25);
+      float warp2 = snoise(vPosition * mix(2.0, 3.8, fluidity) + uTime * mix(0.04, 0.20, fluidity))
+                  * uColorWarp * mix(0.08, 0.52, fluidity);
+      colorT = clamp(mix(linearField, fluid, mixAmt) + warp2, 0.0, 1.0);
 
     } else {
       // ── Sharp Fold ───────────────────────────────────────
@@ -1616,8 +1618,6 @@ const THEMES = [
     colors:['#38bdf8','#a78bfa','#f472b6','#e879a0','#ffd6e8','#c4f0ff','#7ee8fa'] },
 
   // ── Mevcut temalar
-  { id:'soap',    name:'Soap',    swatch:'conic-gradient(#a8edea,#c3cfe2,#fed6e3,#a8edea)',
-    colors:['#a8edea','#c3cfe2','#fed6e3','#ffffff'] },
   { id:'aurora',  name:'Aurora',  swatch:'conic-gradient(#43e97b,#38f9d7,#5ee7df,#b490ca,#43e97b)',
     colors:['#43e97b','#38f9d7','#5ee7df','#b490ca'] },
   { id:'sunset',  name:'Sunset',  swatch:'conic-gradient(#fa709a,#fee140,#f5af19,#fa709a)',
@@ -1626,8 +1626,6 @@ const THEMES = [
     colors:['#0f3460','#16213e','#00d2ff','#c9ffbf'] },
   { id:'galaxy',  name:'Galaxy',  swatch:'conic-gradient(#7928ca,#ff0080,#4f46e5,#7928ca)',
     colors:['#7928ca','#ff0080','#4f46e5','#e0c3fc'] },
-  { id:'jade',    name:'Jade',    swatch:'conic-gradient(#6ee7b7,#fde68a,#a7f3d0,#6ee7b7)',
-    colors:['#6ee7b7','#fde68a','#a7f3d0','#ffffff'] },
 
   // ── Yeni trendler
   { id:'rosegold',   name:'Rose Gold', swatch:'conic-gradient(#f4a4a4,#f9d5c0,#e8c4c4,#fce4ec,#f4a4a4)',
@@ -1636,8 +1634,6 @@ const THEMES = [
     colors:['#1b1b2a','#ff007a','#00ffb3','#0088ff'] },
   { id:'lava',       name:'Lava',      swatch:'conic-gradient(#8b0000,#ff4500,#ff8c00,#8b0000)',
     colors:['#1a0500','#8b0000','#ff4500','#ffcc00'] },
-  { id:'nordic',     name:'Nordic',    swatch:'conic-gradient(#9fcccb,#c8dce0,#e4eff0,#9fcccb)',
-    colors:['#6ba3a2','#9fcccb','#c8dce0','#e8f4f5'] },
   { id:'cotton',     name:'Candy',     swatch:'conic-gradient(#ffb3d9,#ffc0e0,#d4a5e8,#b5d5f5,#ffb3d9)',
     colors:['#ffc0e0','#ffb3d9','#d4a5e8','#b5d5f5'] },
   { id:'forest',     name:'Forest',    swatch:'conic-gradient(#2d5016,#468b47,#a8d5a8,#2d5016)',
@@ -2185,7 +2181,7 @@ function renderColorGrid(){
     input.addEventListener('input', e => {
       paletteColors[idx] = e.target.value;
       syncColorsToShader();
-      document.querySelectorAll('.theme-btn').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('#theme-grid .theme-btn').forEach(b=>b.classList.remove('active'));
     });
 
     // Remove button (only if more than MIN_COLORS)
@@ -2199,7 +2195,7 @@ function renderColorGrid(){
       paletteColors.splice(idx, 1);
       syncColorsToShader();
       renderColorGrid();
-      document.querySelectorAll('.theme-btn').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('#theme-grid .theme-btn').forEach(b=>b.classList.remove('active'));
     });
 
     item.appendChild(label);
@@ -2243,7 +2239,7 @@ function buildThemeGrid(){
       <div class="theme-swatch" style="background:${t.swatch}"></div>
       <span>${t.name}</span>`;
     btn.addEventListener('click', () => {
-      document.querySelectorAll('.theme-btn').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('#theme-grid .theme-btn').forEach(b=>b.classList.remove('active'));
       btn.classList.add('active');
       paletteColors = [...t.colors];
       syncColorsToShader();
@@ -2262,6 +2258,31 @@ function buildThemeGrid(){
 buildThemeGrid();
 renderColorGrid();
 syncColorsToShader();
+document.getElementById('theme-random-btn').addEventListener('click', () => {
+  const randomColor = () => {
+    const h = Math.floor(Math.random() * 360);
+    const s = 60 + Math.random() * 30;
+    const l = 45 + Math.random() * 20;
+    const c = (1 - Math.abs(2 * (l / 100) - 1)) * (s / 100);
+    const x = c * (1 - Math.abs((h / 60) % 2 - 1));
+    const m = (l / 100) - c / 2;
+    let r = 0, g = 0, b = 0;
+    if(h < 60){ r = c; g = x; }
+    else if(h < 120){ r = x; g = c; }
+    else if(h < 180){ g = c; b = x; }
+    else if(h < 240){ g = x; b = c; }
+    else if(h < 300){ r = x; b = c; }
+    else { r = c; b = x; }
+    const toHex = v => Math.round((v + m) * 255).toString(16).padStart(2, '0');
+    return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+  };
+  const count = Math.max(3, Math.min(8, paletteColors.length || 5));
+  paletteColors = Array.from({ length: count }, randomColor);
+  syncColorsToShader();
+  renderColorGrid();
+  document.querySelectorAll('#theme-grid .theme-btn').forEach(b=>b.classList.remove('active'));
+  toast('Random palette generated.');
+});
 
 // ── Material preset system ────────────────────────────────
 // Each preset defines [roughness, metallic, specPow, fuzzy, envStrength, aniso, metallicLayer]
@@ -2269,13 +2290,12 @@ const MAT_PRESETS = {
   glossy:   [0.00, 0.00, 128, 0.00, 0.6, 0.5, 0],
   matte:    [0.85, 0.00,   4, 0.00, 0.0, 0.0, 0],
   metallic: [0.05, 0.90,  96, 0.00, 0.8, 0.7, 1],
-  plastic:  [0.15, 0.00,  80, 0.00, 0.0, 0.0, 0],
-  fuzzy:    [0.70, 0.00,   3, 0.85, 0.0, 0.0, 0],
-  ceramic:  [0.30, 0.00,  48, 0.00, 0.0, 0.0, 0],
 };
 
 function applyMatPreset(name){
-  const [rough, metal, spec, fuzz, env, aniso, metalLayer] = MAT_PRESETS[name];
+  const preset = MAT_PRESETS[name] || MAT_PRESETS.glossy;
+  const [rough, metal, spec, fuzz, env, aniso, metalLayer] = preset;
+  const isMetal = name === 'metallic';
   // Set uniforms
   uniforms.uRoughness.value     = rough;
   uniforms.uMetallic.value      = metal;
@@ -2291,10 +2311,19 @@ function applyMatPreset(name){
   setSliderVal('fuzzyIntensity', fuzz);
   setSliderVal('envStrength',  env);
   setSliderVal('aniso',        aniso);
-  // Sync metallic toggle
+  // Sync metallic layer UI (only visible for Metal preset)
+  const layerWrap = document.getElementById('metallic-layer-wrap');
   const toggle = document.getElementById('metallic-toggle');
-  toggle.checked = metalLayer > 0.5;
-  document.getElementById('metallic-controls').style.display = toggle.checked ? 'block' : 'none';
+  const controls = document.getElementById('metallic-controls');
+  layerWrap.style.display = isMetal ? 'block' : 'none';
+  if(isMetal){
+    toggle.checked = metalLayer > 0.5;
+    controls.style.display = toggle.checked ? 'block' : 'none';
+  } else {
+    toggle.checked = false;
+    uniforms.uMetallicLayer.value = 0.0;
+    controls.style.display = 'none';
+  }
 }
 
 function setSliderVal(id, val){
@@ -2317,6 +2346,7 @@ document.querySelectorAll('.mat-btn').forEach(btn => {
 
 // Metallic toggle
 document.getElementById('metallic-toggle').addEventListener('change', e => {
+  if(document.getElementById('metallic-layer-wrap').style.display === 'none') return;
   uniforms.uMetallicLayer.value = e.target.checked ? 1.0 : 0.0;
   document.getElementById('metallic-controls').style.display = e.target.checked ? 'block' : 'none';
 });
@@ -2361,17 +2391,6 @@ function applyFresnelDirection(dir){
   uniforms.uFresnelDir.value.copy(next);
 }
 
-function applyLightMode(mode){
-  const directional = mode === 'directional';
-  uniforms.uLightMode.value = directional ? 1.0 : 0.0;
-  document.getElementById('lightDirectionWrap').style.display = directional ? 'block' : 'none';
-}
-
-function applyLightDirection(dir){
-  const next = DIRECTION_PRESETS[dir] || DIRECTION_PRESETS.right;
-  uniforms.uLightDir.value.copy(next);
-}
-
 document.getElementById('fresnelMode').addEventListener('change', e => {
   applyFresnelMode(e.target.value);
 });
@@ -2380,18 +2399,9 @@ document.getElementById('fresnelDirection').addEventListener('change', e => {
   applyFresnelDirection(e.target.value);
 });
 
-document.getElementById('lightMode').addEventListener('change', e => {
-  applyLightMode(e.target.value);
-});
-
-document.getElementById('lightDirection').addEventListener('change', e => {
-  applyLightDirection(e.target.value);
-});
-
 applyFresnelMode(document.getElementById('fresnelMode').value);
 applyFresnelDirection(document.getElementById('fresnelDirection').value);
-applyLightMode(document.getElementById('lightMode').value);
-applyLightDirection(document.getElementById('lightDirection').value);
+uniforms.uLightMode.value = 0.0;
 
 // Generic slider binder
 function bindSlider(id, displayId, setter){
@@ -2441,9 +2451,10 @@ bindSlider('turbulence',      'turbulence-val',       v=>uniforms.uTurbulence.va
 const exportSettings = {
   imageScale: 1,
   videoFormat: 'webm',
+  videoResolution: 'source',
   durationSec: 8,
   fps: 60,
-  bitrateMbps: 8,
+  bitrateMbps: 12,
 };
 
 const exportModal = document.getElementById('export-modal');
@@ -2452,6 +2463,7 @@ const closeExportModalBtn = document.getElementById('close-export-modal');
 const exportTabButtons = Array.from(document.querySelectorAll('.export-tab'));
 const exportPanes = Array.from(document.querySelectorAll('.export-pane'));
 const videoFormatChipButtons = Array.from(document.querySelectorAll('#video-format-chips [data-video-format]'));
+const videoResChipButtons = Array.from(document.querySelectorAll('#video-res-chips [data-video-res]'));
 const imageFormatChipButtons = Array.from(document.querySelectorAll('#image-format-chips [data-image-format]'));
 const codeFormatChipButtons = Array.from(document.querySelectorAll('#code-format-chips [data-code-format]'));
 const codeOutput = document.getElementById('code-output');
@@ -2535,6 +2547,12 @@ videoFormatChipButtons.forEach(btn => {
     activateChip(videoFormatChipButtons, btn);
     selectedVideoFormat = btn.dataset.videoFormat === 'mp4' ? 'mp4' : 'webm';
     exportSettings.videoFormat = selectedVideoFormat;
+  });
+});
+videoResChipButtons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    activateChip(videoResChipButtons, btn);
+    exportSettings.videoResolution = btn.dataset.videoRes || 'source';
   });
 });
 imageFormatChipButtons.forEach(btn => {
@@ -2752,6 +2770,7 @@ document.getElementById('copy-code').addEventListener('click', async () => {
   try{
     await navigator.clipboard.writeText(codeOutput.textContent);
     toast('Code copied.');
+    trackEvent('code_copied', { type: selectedCodeFormat, loop: codeLoopSeconds, speed: codeTimeSpeed });
   }catch(_){
     const ta = document.createElement('textarea');
     ta.value = codeOutput.textContent;
@@ -2760,6 +2779,7 @@ document.getElementById('copy-code').addEventListener('click', async () => {
     document.execCommand('copy');
     ta.remove();
     toast('Code copied.');
+    trackEvent('code_copied', { type: selectedCodeFormat, loop: codeLoopSeconds, speed: codeTimeSpeed });
   }
 });
 
@@ -2866,6 +2886,20 @@ function toast(msg){
   setTimeout(()=>el.classList.remove('show'),2200);
 }
 
+function trackEvent(name, data){
+  try{
+    if(typeof window.va !== 'function') return;
+    const payload = data && typeof data === 'object' ? data : {};
+    try{
+      window.va('event', { name, data: payload });
+      return;
+    }catch(_){}
+    try{
+      window.va('track', name, payload);
+    }catch(_){}
+  }catch(_){}
+}
+
 // ── Export ───────────────────────────────────────────────
 function renderNow(){
   orbitControls.update();
@@ -2914,16 +2948,25 @@ function exportImage(type){
     if(!blob){
       if(type === 'image/webp'){
         toast('WebP unsupported, falling back to PNG.');
+        trackEvent('image_export_fallback', { from: 'webp', to: 'png' });
         exportImage('image/png');
         return;
       }
       toast('Export failed.');
+      trackEvent('image_export_failed', { format: type, scale: exportSettings.imageScale });
       return;
     }
     const ext = type === 'image/jpeg' ? 'jpg' : type === 'image/webp' ? 'webp' : 'png';
     const filename = `liquid-shape.${ext}`;
     downloadBlob(blob, filename);
     toast(`Saved as ${filename}`);
+    trackEvent('image_export_success', {
+      format: ext,
+      scale: exportSettings.imageScale,
+      fileSizeBytes: blob.size,
+      canvasWidth: canvas.width,
+      canvasHeight: canvas.height
+    });
   }, type, quality);
 }
 document.getElementById('export-image-action').addEventListener('click', () => {
@@ -2935,15 +2978,16 @@ document.getElementById('export-image-action').addEventListener('click', () => {
 let mediaRecorder = null;
 let chunks = [];
 let recordStopTimer = null;
+let restoreVideoResolutionCapture = null;
 const recBtn = document.getElementById('export-video');
 const recDot = document.getElementById('rec-dot');
 
 function getPreferredVideoMime(format){
   const webmCandidates = [
-    'video/webm;codecs=vp9,opus',
-    'video/webm;codecs=vp9',
     'video/webm;codecs=vp8,opus',
     'video/webm;codecs=vp8',
+    'video/webm;codecs=vp9,opus',
+    'video/webm;codecs=vp9',
     'video/webm',
   ];
   const mp4Candidates = [
@@ -2978,13 +3022,90 @@ function stopRecording(){
   }
 }
 
+const VIDEO_RESOLUTION_PRESETS = {
+  '2k': 2560,
+  '4k': 3840,
+};
+
+function getNextLowerVideoResolution(mode){
+  if(mode === '4k') return '2k';
+  if(mode === '2k') return 'source';
+  return 'source';
+}
+
+function getRenderTargetSizeForVideoResolution(mode){
+  if(mode === 'source') return null;
+  const longEdge = VIDEO_RESOLUTION_PRESETS[mode];
+  if(!longEdge) return null;
+  const baseSize = renderer.getSize(new THREE.Vector2());
+  const aspect = (baseSize.y > 0) ? (baseSize.x / baseSize.y) : (16 / 9);
+  let targetW = longEdge;
+  let targetH = longEdge;
+  if(aspect >= 1){
+    targetH = Math.round(longEdge / aspect);
+  } else {
+    targetW = Math.round(longEdge * aspect);
+  }
+  targetW = Math.max(2, targetW - (targetW % 2));
+  targetH = Math.max(2, targetH - (targetH % 2));
+  return [targetW, targetH];
+}
+
+function resolveVideoResolutionForDevice(mode){
+  if(mode === 'source') return { mode:'source', fallback:false };
+  const target = getRenderTargetSizeForVideoResolution(mode);
+  if(!target) return { mode:'source', fallback:true };
+
+  const maxTex = renderer.capabilities?.maxTextureSize || 16384;
+  const maxRb = renderer.capabilities?.maxRenderbufferSize || maxTex;
+  const maxDim = Math.max(1, Math.min(maxTex, maxRb));
+
+  let current = mode;
+  while(current !== 'source'){
+    const size = getRenderTargetSizeForVideoResolution(current);
+    if(size && size[0] <= maxDim && size[1] <= maxDim){
+      return { mode: current, fallback: current !== mode };
+    }
+    current = getNextLowerVideoResolution(current);
+  }
+  return { mode:'source', fallback:true };
+}
+
+function beginVideoResolutionCapture(mode){
+  const target = getRenderTargetSizeForVideoResolution(mode);
+  if(!target) return () => {};
+
+  const prevDpr = renderer.getPixelRatio();
+  const prevSize = renderer.getSize(new THREE.Vector2());
+  const prevAspect = camera.aspect;
+  const targetW = target[0];
+  const targetH = target[1];
+
+  renderer.setPixelRatio(1);
+  renderer.setSize(targetW, targetH, false);
+  camera.aspect = targetW / targetH;
+  camera.updateProjectionMatrix();
+  renderNow();
+
+  return () => {
+    renderer.setPixelRatio(prevDpr);
+    renderer.setSize(prevSize.x, prevSize.y, false);
+    camera.aspect = prevAspect;
+    camera.updateProjectionMatrix();
+    renderNow();
+    updateExportScaleInfo();
+  };
+}
+
 function startRecording(){
   if(typeof MediaRecorder === 'undefined'){
     toast('MediaRecorder not supported in this browser.');
+    trackEvent('video_export_failed', { reason: 'mediarecorder_unsupported' });
     return;
   }
   if(typeof canvas.captureStream !== 'function'){
     toast('Canvas captureStream is not supported in this browser.');
+    trackEvent('video_export_failed', { reason: 'capture_stream_unsupported' });
     return;
   }
 
@@ -2992,18 +3113,40 @@ function startRecording(){
   const mime = getPreferredVideoMime(requestedFormat);
   if(!mime){
     toast('No supported video codec found.');
+    trackEvent('video_export_failed', { reason: 'codec_not_supported' });
     return;
   }
   const extension = mime.includes('mp4') ? 'mp4' : 'webm';
   if(requestedFormat === 'mp4' && extension !== 'mp4'){
     toast('MP4 unsupported, falling back to WebM.');
+    trackEvent('video_export_fallback', { reason: 'requested_mp4_unsupported', actualFormat: extension });
+  }
+  let effectiveResolution = exportSettings.videoResolution;
+  const resolved = resolveVideoResolutionForDevice(effectiveResolution);
+  if(resolved.fallback){
+    const label = resolved.mode === 'source' ? 'Source' : resolved.mode.toUpperCase();
+    toast(`Selected resolution unsupported on this device. Using ${label}.`);
+    effectiveResolution = resolved.mode;
+    const activeBtn = videoResChipButtons.find(btn => (btn.dataset.videoRes || 'source') === effectiveResolution);
+    if(activeBtn) activateChip(videoResChipButtons, activeBtn);
+    exportSettings.videoResolution = effectiveResolution;
+    trackEvent('video_export_fallback', { reason: 'resolution_unsupported', resolved: effectiveResolution });
   }
 
-  const fps = Math.max(1, Math.round(exportSettings.fps));
+  const fps = Math.max(1, Math.min(120, Math.round(exportSettings.fps)));
   const durationMs = Math.max(500, Math.round(exportSettings.durationSec * 1000));
   const bitrate = Math.max(1_000_000, Math.round(exportSettings.bitrateMbps * 1_000_000));
+  trackEvent('video_export_started', {
+    requestedFormat,
+    actualFormat: extension,
+    resolution: effectiveResolution,
+    fps,
+    bitrateMbps: exportSettings.bitrateMbps,
+    durationSec: exportSettings.durationSec
+  });
 
   chunks = [];
+  restoreVideoResolutionCapture = beginVideoResolutionCapture(effectiveResolution);
   renderNow();
 
   try {
@@ -3012,7 +3155,12 @@ function startRecording(){
       videoBitsPerSecond: bitrate,
     });
   } catch (error) {
+    if(restoreVideoResolutionCapture){
+      restoreVideoResolutionCapture();
+      restoreVideoResolutionCapture = null;
+    }
     toast('Could not start recorder with current settings.');
+    trackEvent('video_export_failed', { reason: 'recorder_start_failed', format: extension, resolution: effectiveResolution });
     return;
   }
 
@@ -3021,7 +3169,12 @@ function startRecording(){
   };
 
   mediaRecorder.onerror = () => {
+    if(restoreVideoResolutionCapture){
+      restoreVideoResolutionCapture();
+      restoreVideoResolutionCapture = null;
+    }
     toast('Recording failed.');
+    trackEvent('video_export_failed', { reason: 'recorder_error', format: extension, resolution: effectiveResolution });
     setRecordingUI(false);
     mediaRecorder = null;
   };
@@ -3036,8 +3189,40 @@ function startRecording(){
       const filename = `liquid-shape.${extension}`;
       downloadBlob(blob, filename);
       toast(`Video saved → ${filename}`);
+      trackEvent('video_export_success', {
+        format: extension,
+        resolution: effectiveResolution,
+        fps,
+        bitrateMbps: exportSettings.bitrateMbps,
+        durationSec: exportSettings.durationSec,
+        fileSizeBytes: blob.size
+      });
     } else {
+      if(extension === 'mp4' && effectiveResolution !== 'source'){
+        const retryResolution = getNextLowerVideoResolution(effectiveResolution);
+        if(retryResolution !== effectiveResolution){
+          const retryLabel = retryResolution === 'source' ? 'Source' : retryResolution.toUpperCase();
+          toast(`Empty output at ${effectiveResolution.toUpperCase()}. Retrying ${retryLabel}...`);
+          if(restoreVideoResolutionCapture){
+            restoreVideoResolutionCapture();
+            restoreVideoResolutionCapture = null;
+          }
+          const activeBtn = videoResChipButtons.find(btn => (btn.dataset.videoRes || 'source') === retryResolution);
+          if(activeBtn) activateChip(videoResChipButtons, activeBtn);
+          exportSettings.videoResolution = retryResolution;
+          trackEvent('video_export_fallback', { reason: 'empty_blob_retry', from: effectiveResolution, to: retryResolution });
+          mediaRecorder = null;
+          setRecordingUI(false);
+          setTimeout(() => startRecording(), 80);
+          return;
+        }
+      }
       toast('Recording failed (empty output).');
+      trackEvent('video_export_failed', { reason: 'empty_blob', format: extension, resolution: effectiveResolution });
+    }
+    if(restoreVideoResolutionCapture){
+      restoreVideoResolutionCapture();
+      restoreVideoResolutionCapture = null;
     }
     mediaRecorder = null;
     setRecordingUI(false);
