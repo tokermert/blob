@@ -42,6 +42,7 @@ const audienceItems = [
 ];
 
 const showcaseVideos = ["/videos/showcase-1.webm", "/videos/showcase-2.webm", "/videos/showcase-3.webm"];
+const tryNowUrl = "https://liquidorb.vercel.app/";
 
 function FeatureIcon({ name }: { name: FeatureKey }) {
   if (name === "procedural") {
@@ -115,7 +116,7 @@ export default function HomePage() {
             </p>
 
             <div className="mt-10 flex flex-wrap gap-3">
-              <Link href="/editor" className="button-accent">
+              <Link href={tryNowUrl} className="button-accent" target="_blank" rel="noreferrer">
                 Try it now <span aria-hidden="true">→</span>
               </Link>
             </div>
@@ -179,6 +180,18 @@ export default function HomePage() {
       </section>
 
       <section className="px-5 py-12 sm:px-8">
+        <Reveal className="mx-auto w-full max-w-[1200px] rounded-[30px] border border-zinc-800/80 bg-surface/90 p-6 text-center shadow-[0_0_0_1px_rgba(255,255,255,0.015)] sm:p-8 lg:p-10">
+          <h2 className="text-3xl font-medium tracking-[-0.03em] text-zinc-100 sm:text-4xl">Try it</h2>
+          <p className="mt-4 text-sm text-zinc-500">Free forever · Runs in your browser · No account</p>
+          <div className="mt-8 flex justify-center">
+            <Link href={tryNowUrl} className="button-accent" target="_blank" rel="noreferrer">
+              Try it now <span aria-hidden="true">→</span>
+            </Link>
+          </div>
+        </Reveal>
+      </section>
+
+      <section className="px-5 py-12 sm:px-8">
         <Reveal className="mx-auto w-full max-w-[1200px] rounded-[30px] border border-zinc-800/80 bg-surface/90 p-6 shadow-[0_0_0_1px_rgba(255,255,255,0.015)] sm:p-8 lg:p-10">
           <h2 className="text-3xl font-medium tracking-[-0.03em] text-zinc-100 sm:text-4xl">About the maker</h2>
           <div className="mt-8 max-w-[680px] space-y-5 text-lg leading-relaxed text-zinc-300">
@@ -199,7 +212,7 @@ export default function HomePage() {
             <Link href="https://buymeacoffee.com/merttoker" className="button-accent" target="_blank" rel="noreferrer">
               Buy me a coffee ☕
             </Link>
-            <Link href="mailto:hello@merttoker.com" className="button-muted">
+            <Link href="mailto:mert@merttoker.com" className="button-muted">
               Contact <span aria-hidden="true">→</span>
             </Link>
           </div>
