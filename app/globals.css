@@ -271,6 +271,24 @@ body {
   --video-zoom: 2.1;
 }
 
+.try-it-preview-wrap {
+  width: min(100%, 360px);
+  aspect-ratio: 1 / 1;
+  margin: 0 auto 1rem;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+}
+
+.try-it-preview {
+  width: 180%;
+  max-width: none;
+  height: auto;
+  transform: translateY(2%);
+  mix-blend-mode: screen;
+  filter: saturate(1.08) contrast(1.03);
+}
+
 .footer-link {
   color: #a4a4a4;
   text-decoration: none;
@@ -328,5 +346,10 @@ body {
 
   .showcase-item:hover .showcase-video {
     transform: translateY(-2px) scale(1.66);
+  }
+
+  .try-it-preview-wrap {
+    width: min(100%, 300px);
+    margin-bottom: 0.85rem;
   }
 }
