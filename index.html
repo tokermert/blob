@@ -758,16 +758,16 @@ input[type=range]::-moz-range-thumb {
           <input type="range" id="fluidSwirl" min="0.1" max="4" step="0.05" value="1.0">
         </div>
         <div class="slider-wrap">
-          <div class="slider-header"><span class="slider-label" style="color:#a78bfa;">◈ Thin-Film Iris</span><span class="slider-val" id="thinFilm-val">0.4</span></div>
-          <input type="range" id="thinFilm" min="0" max="1" step="0.01" value="0.4">
+          <div class="slider-header"><span class="slider-label" style="color:#a78bfa;">◈ Thin-Film Iris</span><span class="slider-val" id="thinFilm-val">0.0</span></div>
+          <input type="range" id="thinFilm" min="0" max="1" step="0.01" value="0.0">
         </div>
         <div class="slider-wrap">
-          <div class="slider-header"><span class="slider-label" style="color:#a78bfa;">⟁ Chromatic Split</span><span class="slider-val" id="chromaticAb-val">0.3</span></div>
-          <input type="range" id="chromaticAb" min="0" max="1" step="0.01" value="0.3">
+          <div class="slider-header"><span class="slider-label" style="color:#a78bfa;">⟁ Chromatic Split</span><span class="slider-val" id="chromaticAb-val">0.0</span></div>
+          <input type="range" id="chromaticAb" min="0" max="1" step="0.01" value="0.0">
         </div>
         <div class="slider-wrap">
-          <div class="slider-header"><span class="slider-label" style="color:#a78bfa;">≋ Fold Lines</span><span class="slider-val" id="foldLines-val">0.5</span></div>
-          <input type="range" id="foldLines" min="0" max="1" step="0.01" value="0.5">
+          <div class="slider-header"><span class="slider-label" style="color:#a78bfa;">≋ Fold Lines</span><span class="slider-val" id="foldLines-val">0.0</span></div>
+          <input type="range" id="foldLines" min="0" max="1" step="0.01" value="0.0">
         </div>
       </div>
       <div class="slider-wrap">
@@ -816,12 +816,12 @@ input[type=range]::-moz-range-thumb {
         </select>
       </div>
       <div class="slider-wrap">
-        <div class="slider-header"><span class="slider-label">Light Brightness</span><span class="slider-val" id="lightBrightness-val">1.0</span></div>
-        <input type="range" id="lightBrightness" min="0" max="2" step="0.1" value="1.0">
+        <div class="slider-header"><span class="slider-label">Light Brightness</span><span class="slider-val" id="lightBrightness-val">0.5</span></div>
+        <input type="range" id="lightBrightness" min="0" max="2" step="0.1" value="0.5">
       </div>
       <div class="slider-wrap">
-        <div class="slider-header"><span class="slider-label">Light Scale</span><span class="slider-val" id="lightScale-val">5.0</span></div>
-        <input type="range" id="lightScale" min="1" max="20" step="0.5" value="5.0">
+        <div class="slider-header"><span class="slider-label">Light Scale</span><span class="slider-val" id="lightScale-val">1.0</span></div>
+        <input type="range" id="lightScale" min="1" max="20" step="0.5" value="1.0">
       </div>
     </div>
 
@@ -1705,8 +1705,8 @@ const uniforms = {
   uFresnelDir:       { value:new THREE.Vector3(1, 0, 0) },
   uLightMode:        { value:0.0 },
   uLightDir:         { value:new THREE.Vector3(1, 0, 0) },
-  uLightBrightness:  { value:1.0 },
-  uLightScale:       { value:5.0 },
+  uLightBrightness:  { value:0.5 },
+  uLightScale:       { value:1.0 },
   uNoiseIntensity:   { value:0.0 },
   uNoiseScale:       { value:15.0 },
   uFilamentIntensity:{ value:0.0 },
@@ -2336,6 +2336,24 @@ function setSliderVal(id, val){
   if(disp) disp.textContent = (id === 'specPow') ? Math.round(val) : parseFloat(val).toFixed(1);
 }
 
+const FLUID_DEFAULTS = {
+  fluidSwirl: 1.0,
+  thinFilm: 0.0,
+  chromaticAb: 0.0,
+  foldLines: 0.0,
+};
+
+function resetFluidControls(){
+  setSliderVal('fluidSwirl', FLUID_DEFAULTS.fluidSwirl);
+  setSliderVal('thinFilm', FLUID_DEFAULTS.thinFilm);
+  setSliderVal('chromaticAb', FLUID_DEFAULTS.chromaticAb);
+  setSliderVal('foldLines', FLUID_DEFAULTS.foldLines);
+  uniforms.uFluidSwirl.value  = FLUID_DEFAULTS.fluidSwirl;
+  uniforms.uThinFilm.value    = FLUID_DEFAULTS.thinFilm;
+  uniforms.uChromaticAb.value = FLUID_DEFAULTS.chromaticAb;
+  uniforms.uFoldLines.value   = FLUID_DEFAULTS.foldLines;
+}
+
 document.querySelectorAll('.mat-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.mat-btn').forEach(b => b.classList.remove('active'));
@@ -2352,11 +2370,17 @@ document.getElementById('metallic-toggle').addEventListener('change', e => {
 });
 
 // Gradient type (0=linear, 1=radial, 2=fluid glass, 3=sharp fold)
+let activeGradientType = document.getElementById('gradientType').value || 'linear';
 document.getElementById('gradientType').addEventListener('change',e=>{
   const v = e.target.value;
+  const prev = activeGradientType;
+  activeGradientType = v;
   uniforms.uGradientType.value = {linear:0.0, radial:1.0, fluid:2.0, sharp:3.0}[v] ?? 0.0;
   document.getElementById('fluid-controls').style.display  = v==='fluid'  ? 'block' : 'none';
   document.getElementById('sharp-controls').style.display  = v==='sharp'  ? 'block' : 'none';
+  if(prev === 'fluid' && v !== 'fluid'){
+    resetFluidControls();
+  }
   if(v === 'fluid'){
     uniforms.uThinFilm.value    = parseFloat(document.getElementById('thinFilm').value);
     uniforms.uChromaticAb.value = parseFloat(document.getElementById('chromaticAb').value);
