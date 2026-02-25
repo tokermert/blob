@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { BlobCanvas } from "@/components/BlobCanvas";
 import { Reveal } from "@/components/Reveal";
 
 type FeatureKey = "procedural" | "seeded" | "exportable" | "instant";
@@ -96,8 +95,10 @@ export default function HomePage() {
 
       <section className="mx-auto flex min-h-svh w-full max-w-[1200px] items-center px-5 pb-10 pt-24 sm:px-8">
         <div className="grid w-full gap-10 lg:grid-cols-[1.12fr_0.88fr] lg:items-center">
-          <Reveal className="hero-canvas-shell h-[48vh] min-h-[360px] w-full overflow-hidden rounded-[28px] border border-zinc-800 bg-[#0b0b0b] sm:h-[56vh] lg:h-[70vh]">
-            <BlobCanvas />
+          <Reveal className="hero-media-shell h-[48vh] min-h-[360px] w-full overflow-hidden sm:h-[56vh] lg:h-[70vh]">
+            <video className="hero-header-video" autoPlay loop muted playsInline preload="metadata" aria-label="Header liquid blob preview">
+              <source src="/videos/header.webm" type="video/webm" />
+            </video>
           </Reveal>
 
           <Reveal className="max-w-[520px]" delay={120}>
