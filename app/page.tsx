@@ -198,18 +198,10 @@ export default function HomePage() {
       <section className="px-5 py-12 sm:px-8">
         <Reveal className="mx-auto w-full max-w-[1200px] rounded-[30px] border border-zinc-800/80 bg-surface/90 p-6 shadow-[0_0_0_1px_rgba(255,255,255,0.015)] sm:p-8 lg:p-10">
           <h2 className="text-3xl font-medium tracking-[-0.03em] text-zinc-100 sm:text-4xl">About the maker</h2>
-          <div className="mt-8 max-w-[680px] space-y-5 text-lg leading-relaxed text-zinc-300">
+          <div className="mt-8 max-w-[980px] space-y-5 text-lg leading-relaxed text-zinc-300">
             <p>Hi, I&apos;m Mert.</p>
-            <p>
-              I built bloblob as a small experiment to generate
-              <br />
-              liquid visuals instantly — without complex tools.
-            </p>
-            <p>
-              Just something fun for designers and developers
-              <br />
-              who like making weird beautiful things.
-            </p>
+            <p>I built bloblob as a small experiment to generate liquid visuals instantly — without complex tools.</p>
+            <p>Just something fun for designers and developers who like making weird beautiful things.</p>
           </div>
 
           <div className="mt-8 flex flex-wrap gap-3">
