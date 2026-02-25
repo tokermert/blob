@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/next";
 import { Inter_Tight } from "next/font/google";
 import type { ReactNode } from "react";
 import "./globals.css";
@@ -17,7 +18,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
   return (
     <html lang="en">
-      <body className={`${interTight.variable} bg-base text-zinc-100 antialiased`}>{children}</body>
+      <body className={`${interTight.variable} bg-base text-zinc-100 antialiased`}>
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }
