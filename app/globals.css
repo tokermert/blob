@@ -272,7 +272,7 @@ body {
 }
 
 .try-it-preview-wrap {
-  width: min(100%, 360px);
+  width: min(100%, 420px);
   aspect-ratio: 1 / 1;
   margin: 0 auto 1rem;
   overflow: hidden;
@@ -281,12 +281,10 @@ body {
 }
 
 .try-it-preview {
-  width: 180%;
-  max-width: none;
-  height: auto;
-  transform: translateY(2%);
-  mix-blend-mode: screen;
-  filter: saturate(1.08) contrast(1.03);
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
 }
 
 .footer-link {
@@ -349,7 +347,7 @@ body {
   }
 
   .try-it-preview-wrap {
-    width: min(100%, 300px);
+    width: min(100%, 320px);
     margin-bottom: 0.85rem;
   }
 }
