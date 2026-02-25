@@ -126,6 +126,12 @@ export default function HomePage() {
         </div>
       </section>
 
+      <section className="px-5 pb-10 sm:px-8 sm:pb-12">
+        <Reveal className="mx-auto w-full max-w-[1200px]">
+          <img className="feature-banner-image" src="/images/feature-banner.png" alt="Bloblob editor preview" />
+        </Reveal>
+      </section>
+
       <section className="section-wrap px-5 py-20 sm:px-8">
         <Reveal className="mx-auto w-full max-w-[1200px] rounded-[30px] border border-zinc-800/80 bg-surface/90 p-6 shadow-[0_0_0_1px_rgba(255,255,255,0.015)] sm:p-8 lg:p-10">
           <h2 className="mb-8 text-3xl font-medium tracking-[-0.03em] text-zinc-100 sm:text-4xl">Features</h2>
