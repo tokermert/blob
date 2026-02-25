@@ -87,8 +87,8 @@ export default function HomePage() {
       <div aria-hidden="true" className="grain-layer" />
 
       <header className="fixed left-6 top-6 z-50 sm:left-8">
-        <p className="inline-flex items-center gap-2 text-sm font-medium tracking-[0.18em] text-zinc-200">
-          <span aria-hidden="true" className="h-2 w-2 rounded-full bg-[#ff9c32] shadow-[0_0_16px_rgba(255,122,0,0.7)]" />
+        <p className="inline-flex items-center gap-3 text-lg font-semibold tracking-[0.14em] text-zinc-100 sm:text-xl">
+          <span aria-hidden="true" className="h-2.5 w-2.5 rounded-full bg-[#ff9c32] shadow-[0_0_18px_rgba(255,122,0,0.75)]" />
           bloblob
         </p>
       </header>
@@ -118,9 +118,6 @@ export default function HomePage() {
               <Link href="/editor" className="button-accent">
                 Try it now <span aria-hidden="true">→</span>
               </Link>
-              <Link href="#examples" className="button-muted">
-                View examples
-              </Link>
             </div>
 
             <p className="mt-4 text-sm text-zinc-500">Free forever · Runs in your browser · No account</p>
@@ -130,7 +127,7 @@ export default function HomePage() {
 
       <section className="section-wrap px-5 py-20 sm:px-8">
         <Reveal className="mx-auto w-full max-w-[1200px] rounded-[30px] border border-zinc-800/80 bg-surface/90 p-6 shadow-[0_0_0_1px_rgba(255,255,255,0.015)] sm:p-8 lg:p-10">
-          <h2 className="mb-8 text-3xl font-medium tracking-[-0.03em] text-zinc-100 sm:text-4xl">Featured features</h2>
+          <h2 className="mb-8 text-3xl font-medium tracking-[-0.03em] text-zinc-100 sm:text-4xl">Features</h2>
           <div className="grid gap-4 sm:grid-cols-2">
             {featureItems.map((item, index) => (
               <Reveal
@@ -138,11 +135,10 @@ export default function HomePage() {
                 className={`feature-card feature-${item.key} rounded-2xl border border-zinc-800/90 bg-[#0a0a0a] p-6`}
                 delay={index * 80}
               >
-                <div className="mb-6 flex items-center gap-3">
+                <div className="mb-6 flex items-center">
                   <span className="feature-icon">
                     <FeatureIcon name={item.key} />
                   </span>
-                  <p className="text-[11px] uppercase tracking-[0.18em] text-zinc-500">{item.key}</p>
                 </div>
                 <h3 className="text-2xl font-medium tracking-[-0.03em] text-zinc-100">{item.title}</h3>
                 <p className="mt-3 text-zinc-400">{item.text}</p>
@@ -200,10 +196,7 @@ export default function HomePage() {
           </div>
 
           <div className="mt-8 flex flex-wrap gap-3">
-            <Link href="https://merttoker.com" className="button-accent" target="_blank" rel="noreferrer">
-              Visit merttoker.com <span aria-hidden="true">→</span>
-            </Link>
-            <Link href="https://buymeacoffee.com/merttoker" className="button-muted" target="_blank" rel="noreferrer">
+            <Link href="https://buymeacoffee.com/merttoker" className="button-accent" target="_blank" rel="noreferrer">
               Buy me a coffee ☕
             </Link>
             <Link href="mailto:hello@merttoker.com" className="button-muted">
@@ -215,22 +208,11 @@ export default function HomePage() {
       </section>
 
       <footer className="border-t border-zinc-900 px-5 pb-10 pt-12 sm:px-8">
-        <div className="mx-auto grid w-full max-w-[1200px] gap-8 md:grid-cols-2">
+        <div className="mx-auto w-full max-w-[1200px]">
           <div>
             <p className="text-xl font-medium tracking-[-0.03em] text-zinc-100">bloblob</p>
             <p className="mt-2 text-zinc-500">A liquid asset generator.</p>
           </div>
-          <nav aria-label="Footer links" className="flex items-start justify-start gap-4 md:justify-end">
-            <Link className="footer-link" href="https://github.com/tokermert" target="_blank" rel="noreferrer">
-              GitHub
-            </Link>
-            <Link className="footer-link" href="mailto:hello@merttoker.com">
-              Contact
-            </Link>
-            <Link className="footer-link" href="https://merttoker.com" target="_blank" rel="noreferrer">
-              merttoker.com
-            </Link>
-          </nav>
         </div>
         <p className="mx-auto mt-12 w-full max-w-[1200px] text-xs uppercase tracking-[0.14em] text-zinc-600">
           © 2026 · made by mert toker
