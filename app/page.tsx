@@ -181,8 +181,20 @@ export default function HomePage() {
 
       <section className="px-5 py-12 sm:px-8">
         <Reveal className="mx-auto w-full max-w-[1200px] rounded-[30px] border border-zinc-800/80 bg-surface/90 p-6 text-center shadow-[0_0_0_1px_rgba(255,255,255,0.015)] sm:p-8 lg:p-10">
-          <h2 className="text-3xl font-medium tracking-[-0.03em] text-zinc-100 sm:text-4xl">Try it</h2>
-          <p className="mt-4 text-sm text-zinc-500">Free forever · Runs in your browser · No account</p>
+          <video
+            className="mx-auto mb-6 block w-full max-w-[420px] rounded-2xl border border-zinc-800/80 bg-black/80"
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="metadata"
+            aria-label="Try it preview"
+          >
+            <source src="/videos/try-it.webm" type="video/webm" />
+          </video>
+          <h2 className="text-2xl font-medium tracking-[-0.03em] text-zinc-100 sm:text-3xl">
+            Free forever · Runs in your browser · No account
+          </h2>
           <div className="mt-8 flex justify-center">
             <Link href={tryNowUrl} className="button-accent" target="_blank" rel="noreferrer">
               Try it now <span aria-hidden="true">→</span>
