@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { BlobCanvas } from "@/components/BlobCanvas";
-import { ExamplesStrip } from "@/components/ExamplesStrip";
 import { Reveal } from "@/components/Reveal";
 
 type FeatureKey = "procedural" | "seeded" | "exportable" | "instant";
@@ -42,6 +41,8 @@ const audienceItems = [
     text: "Album art, loops, generative visuals."
   }
 ];
+
+const showcaseVideos = ["/videos/showcase-1.webm", "/videos/showcase-2.webm", "/videos/showcase-3.webm"];
 
 function FeatureIcon({ name }: { name: FeatureKey }) {
   if (name === "procedural") {
@@ -151,9 +152,16 @@ export default function HomePage() {
       </section>
 
       <section id="examples" className="px-5 py-12 sm:px-8">
-        <Reveal className="mx-auto w-full max-w-[1200px] rounded-[30px] border border-zinc-800/80 bg-surface/90 p-6 shadow-[0_0_0_1px_rgba(255,255,255,0.015)] sm:p-8">
-          <h2 className="mb-6 text-3xl font-medium tracking-[-0.03em] text-zinc-100 sm:text-4xl">Live examples</h2>
-          <ExamplesStrip />
+        <Reveal className="mx-auto w-full max-w-[1200px]">
+          <div className="showcase-grid">
+            {showcaseVideos.map((src, index) => (
+              <figure key={src} className="showcase-item">
+                <video className="showcase-video" autoPlay loop muted playsInline preload="metadata" aria-label={`Showcase ${index + 1}`}>
+                  <source src={src} type="video/webm" />
+                </video>
+              </figure>
+            ))}
+          </div>
         </Reveal>
       </section>
 

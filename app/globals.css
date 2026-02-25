@@ -209,48 +209,44 @@ body {
   box-shadow: 0 16px 34px rgba(0, 0, 0, 0.4);
 }
 
-.examples-shell {
-  overflow: hidden;
-  border: 1px solid #232323;
-  border-radius: 20px;
-  background: linear-gradient(180deg, #0c0c0c, #080808);
-  padding: 18px 0;
+.showcase-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(0.75rem, 2.2vw, 2.5rem);
+  align-items: center;
 }
 
-.examples-track {
-  display: flex;
-  width: max-content;
-  animation: marquee 46s linear infinite;
-}
-
-.example-card {
-  width: 178px;
-  height: 116px;
-  border-radius: 14px;
-  border: 1px solid #232323;
-  background: #0b0b0b;
-  margin: 0 10px;
+.showcase-item {
+  position: relative;
+  min-height: clamp(200px, 28vw, 360px);
+  margin: 0;
   display: grid;
   place-items: center;
-  transition:
-    border-color 240ms ease,
-    transform 240ms ease;
 }
 
-.example-card:nth-child(3n) {
-  transform: translateY(-3px);
+.showcase-item::before {
+  content: "";
+  position: absolute;
+  width: 58%;
+  height: 58%;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(255, 140, 48, 0.1), rgba(255, 140, 48, 0));
+  filter: blur(22px);
+  pointer-events: none;
 }
 
-.example-card:nth-child(4n) {
-  transform: translateY(4px);
+.showcase-video {
+  width: min(100%, 360px);
+  height: auto;
+  max-height: 360px;
+  object-fit: contain;
+  filter: drop-shadow(0 20px 34px rgba(0, 0, 0, 0.55));
+  transition: transform 260ms ease, filter 260ms ease;
 }
 
-.example-blob {
-  width: 74px;
-  height: 74px;
-  border-radius: 60% 40% 52% 48% / 44% 60% 40% 56%;
-  filter: drop-shadow(0 0 22px rgba(255, 122, 0, 0.3));
-  animation: blobShift 9s ease-in-out infinite;
+.showcase-item:hover .showcase-video {
+  transform: translateY(-3px) scale(1.01);
+  filter: drop-shadow(0 26px 40px rgba(0, 0, 0, 0.62));
 }
 
 .footer-link {
@@ -287,30 +283,14 @@ body {
     transform: none;
     transition: none;
   }
-
-  .examples-track,
-  .example-blob {
-    animation: none;
-  }
 }
 
-@keyframes marquee {
-  0% {
-    transform: translateX(0);
+@media (max-width: 980px) {
+  .showcase-grid {
+    grid-template-columns: 1fr;
   }
-  100% {
-    transform: translateX(-50%);
-  }
-}
 
-@keyframes blobShift {
-  0%,
-  100% {
-    border-radius: 60% 40% 52% 48% / 44% 60% 40% 56%;
-    transform: scale(1);
-  }
-  50% {
-    border-radius: 46% 54% 42% 58% / 62% 48% 52% 38%;
-    transform: scale(1.04);
+  .showcase-item {
+    min-height: clamp(180px, 62vw, 300px);
   }
 }
