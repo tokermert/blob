@@ -1053,6 +1053,15 @@ input[type=range]::-moz-range-thumb {
         </div>
       </div>
       <div class="slider-wrap">
+        <div class="slider-header"><span class="slider-label">Video Ratio</span></div>
+        <div class="chip-group" id="video-aspect-chips">
+          <button class="chip active" data-video-aspect="source">Source</button>
+          <button class="chip" data-video-aspect="square">Square (1:1)</button>
+          <button class="chip" data-video-aspect="landscape">Landscape (16:9)</button>
+          <button class="chip" data-video-aspect="portrait">Portrait (9:16)</button>
+        </div>
+      </div>
+      <div class="slider-wrap">
         <div class="slider-header"><span class="slider-label">Video Duration</span><span class="slider-val" id="videoDuration-val">8.0s</span></div>
         <input type="range" id="videoDuration" min="2" max="20" step="0.5" value="8">
       </div>
@@ -2514,6 +2523,7 @@ const exportSettings = {
   imageScale: 1,
   videoFormat: 'webm',
   videoResolution: 'source',
+  videoAspect: 'source',
   durationSec: 8,
   fps: 60,
   bitrateMbps: 12,
@@ -2526,6 +2536,7 @@ const exportTabButtons = Array.from(document.querySelectorAll('.export-tab'));
 const exportPanes = Array.from(document.querySelectorAll('.export-pane'));
 const videoFormatChipButtons = Array.from(document.querySelectorAll('#video-format-chips [data-video-format]'));
 const videoResChipButtons = Array.from(document.querySelectorAll('#video-res-chips [data-video-res]'));
+const videoAspectChipButtons = Array.from(document.querySelectorAll('#video-aspect-chips [data-video-aspect]'));
 const imageFormatChipButtons = Array.from(document.querySelectorAll('#image-format-chips [data-image-format]'));
 const codeFormatChipButtons = Array.from(document.querySelectorAll('#code-format-chips [data-code-format]'));
 const codeOutput = document.getElementById('code-output');
@@ -2671,6 +2682,9 @@ function captureShareState(){
     rippleFreq: uniforms.uRippleFreq.value,
     noiseIntensity: uniforms.uNoiseIntensity.value,
     noiseScale: uniforms.uNoiseScale.value,
+    videoFormat: selectedVideoFormat,
+    videoResolution: exportSettings.videoResolution,
+    videoAspect: exportSettings.videoAspect,
   };
 }
 
@@ -2743,6 +2757,29 @@ function applyShareState(state){
   applyRangeValue('rippleFreq', state.rippleFreq);
   applyRangeValue('noiseIntensity', state.noiseIntensity);
   applyRangeValue('noiseScale', state.noiseScale);
+
+  if(typeof state.videoFormat === 'string'){
+    const btn = videoFormatChipButtons.find(b => (b.dataset.videoFormat || 'webm') === state.videoFormat);
+    if(btn){
+      activateChip(videoFormatChipButtons, btn);
+      selectedVideoFormat = btn.dataset.videoFormat === 'mp4' ? 'mp4' : 'webm';
+      exportSettings.videoFormat = selectedVideoFormat;
+    }
+  }
+  if(typeof state.videoResolution === 'string'){
+    const btn = videoResChipButtons.find(b => (b.dataset.videoRes || 'source') === state.videoResolution);
+    if(btn){
+      activateChip(videoResChipButtons, btn);
+      exportSettings.videoResolution = btn.dataset.videoRes || 'source';
+    }
+  }
+  if(typeof state.videoAspect === 'string'){
+    const btn = videoAspectChipButtons.find(b => (b.dataset.videoAspect || 'source') === state.videoAspect);
+    if(btn){
+      activateChip(videoAspectChipButtons, btn);
+      exportSettings.videoAspect = btn.dataset.videoAspect || 'source';
+    }
+  }
 
   if(typeof state.materialPreset === 'string'){
     const btn = document.querySelector(`.mat-btn[data-mat="${state.materialPreset}"]`);
@@ -2886,6 +2923,12 @@ videoResChipButtons.forEach(btn => {
   btn.addEventListener('click', () => {
     activateChip(videoResChipButtons, btn);
     exportSettings.videoResolution = btn.dataset.videoRes || 'source';
+  });
+});
+videoAspectChipButtons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    activateChip(videoAspectChipButtons, btn);
+    exportSettings.videoAspect = btn.dataset.videoAspect || 'source';
   });
 });
 imageFormatChipButtons.forEach(btn => {
@@ -3359,6 +3402,12 @@ const VIDEO_RESOLUTION_PRESETS = {
   '2k': 2560,
   '4k': 3840,
 };
+const VIDEO_ASPECT_PRESETS = {
+  source: null,
+  square: 1.0,
+  landscape: 16 / 9,
+  portrait: 9 / 16,
+};
 
 function getNextLowerVideoResolution(mode){
   if(mode === '4k') return '2k';
@@ -3366,12 +3415,28 @@ function getNextLowerVideoResolution(mode){
   return 'source';
 }
 
-function getRenderTargetSizeForVideoResolution(mode){
-  if(mode === 'source') return null;
-  const longEdge = VIDEO_RESOLUTION_PRESETS[mode];
-  if(!longEdge) return null;
+function normalizeVideoAspectMode(mode){
+  return Object.prototype.hasOwnProperty.call(VIDEO_ASPECT_PRESETS, mode) ? mode : 'source';
+}
+
+function getCurrentCanvasAspect(){
   const baseSize = renderer.getSize(new THREE.Vector2());
-  const aspect = (baseSize.y > 0) ? (baseSize.x / baseSize.y) : (16 / 9);
+  return (baseSize.y > 0) ? (baseSize.x / baseSize.y) : (16 / 9);
+}
+
+function getRenderTargetSizeForVideoExport(resolutionMode, aspectMode){
+  const normalizedAspectMode = normalizeVideoAspectMode(aspectMode);
+  if(resolutionMode === 'source' && normalizedAspectMode === 'source') return null;
+
+  const baseSize = renderer.getSize(new THREE.Vector2());
+  const baseLongEdge = Math.max(2, Math.round(Math.max(baseSize.x || 0, baseSize.y || 0) || 2));
+  const longEdge = resolutionMode === 'source' ? baseLongEdge : VIDEO_RESOLUTION_PRESETS[resolutionMode];
+  if(!longEdge) return null;
+
+  const aspect = normalizedAspectMode === 'source'
+    ? getCurrentCanvasAspect()
+    : VIDEO_ASPECT_PRESETS[normalizedAspectMode];
+
   let targetW = longEdge;
   let targetH = longEdge;
   if(aspect >= 1){
@@ -3384,28 +3449,28 @@ function getRenderTargetSizeForVideoResolution(mode){
   return [targetW, targetH];
 }
 
-function resolveVideoResolutionForDevice(mode){
-  if(mode === 'source') return { mode:'source', fallback:false };
-  const target = getRenderTargetSizeForVideoResolution(mode);
-  if(!target) return { mode:'source', fallback:true };
+function resolveVideoResolutionForDevice(mode, aspectMode){
+  const target = getRenderTargetSizeForVideoExport(mode, aspectMode);
+  if(!target) return { mode, fallback:false };
 
   const maxTex = renderer.capabilities?.maxTextureSize || 16384;
   const maxRb = renderer.capabilities?.maxRenderbufferSize || maxTex;
   const maxDim = Math.max(1, Math.min(maxTex, maxRb));
 
   let current = mode;
-  while(current !== 'source'){
-    const size = getRenderTargetSizeForVideoResolution(current);
+  while(true){
+    const size = getRenderTargetSizeForVideoExport(current, aspectMode);
     if(size && size[0] <= maxDim && size[1] <= maxDim){
       return { mode: current, fallback: current !== mode };
     }
+    if(current === 'source') break;
     current = getNextLowerVideoResolution(current);
   }
-  return { mode:'source', fallback:true };
+  return { mode:'source', fallback: mode !== 'source' };
 }
 
-function beginVideoResolutionCapture(mode){
-  const target = getRenderTargetSizeForVideoResolution(mode);
+function beginVideoResolutionCapture(mode, aspectMode){
+  const target = getRenderTargetSizeForVideoExport(mode, aspectMode);
   if(!target) return () => {};
 
   const prevDpr = renderer.getPixelRatio();
@@ -3455,7 +3520,13 @@ function startRecording(){
     trackEvent('video_export_fallback', { reason: 'requested_mp4_unsupported', actualFormat: extension });
   }
   let effectiveResolution = exportSettings.videoResolution;
-  const resolved = resolveVideoResolutionForDevice(effectiveResolution);
+  let effectiveAspect = normalizeVideoAspectMode(exportSettings.videoAspect);
+  if(effectiveAspect !== exportSettings.videoAspect){
+    exportSettings.videoAspect = effectiveAspect;
+    const aspectBtn = videoAspectChipButtons.find(btn => (btn.dataset.videoAspect || 'source') === effectiveAspect);
+    if(aspectBtn) activateChip(videoAspectChipButtons, aspectBtn);
+  }
+  const resolved = resolveVideoResolutionForDevice(effectiveResolution, effectiveAspect);
   if(resolved.fallback){
     const label = resolved.mode === 'source' ? 'Source' : resolved.mode.toUpperCase();
     toast(`Selected resolution unsupported on this device. Using ${label}.`);
@@ -3463,7 +3534,11 @@ function startRecording(){
     const activeBtn = videoResChipButtons.find(btn => (btn.dataset.videoRes || 'source') === effectiveResolution);
     if(activeBtn) activateChip(videoResChipButtons, activeBtn);
     exportSettings.videoResolution = effectiveResolution;
-    trackEvent('video_export_fallback', { reason: 'resolution_unsupported', resolved: effectiveResolution });
+    trackEvent('video_export_fallback', {
+      reason: 'resolution_unsupported',
+      resolved: effectiveResolution,
+      aspect: effectiveAspect
+    });
   }
 
   const fps = Math.max(1, Math.min(120, Math.round(exportSettings.fps)));
@@ -3473,13 +3548,14 @@ function startRecording(){
     requestedFormat,
     actualFormat: extension,
     resolution: effectiveResolution,
+    aspect: effectiveAspect,
     fps,
     bitrateMbps: exportSettings.bitrateMbps,
     durationSec: exportSettings.durationSec
   });
 
   chunks = [];
-  restoreVideoResolutionCapture = beginVideoResolutionCapture(effectiveResolution);
+  restoreVideoResolutionCapture = beginVideoResolutionCapture(effectiveResolution, effectiveAspect);
   renderNow();
 
   try {
@@ -3493,7 +3569,12 @@ function startRecording(){
       restoreVideoResolutionCapture = null;
     }
     toast('Could not start recorder with current settings.');
-    trackEvent('video_export_failed', { reason: 'recorder_start_failed', format: extension, resolution: effectiveResolution });
+    trackEvent('video_export_failed', {
+      reason: 'recorder_start_failed',
+      format: extension,
+      resolution: effectiveResolution,
+      aspect: effectiveAspect
+    });
     return;
   }
 
@@ -3507,7 +3588,12 @@ function startRecording(){
       restoreVideoResolutionCapture = null;
     }
     toast('Recording failed.');
-    trackEvent('video_export_failed', { reason: 'recorder_error', format: extension, resolution: effectiveResolution });
+    trackEvent('video_export_failed', {
+      reason: 'recorder_error',
+      format: extension,
+      resolution: effectiveResolution,
+      aspect: effectiveAspect
+    });
     setRecordingUI(false);
     mediaRecorder = null;
   };
@@ -3525,13 +3611,14 @@ function startRecording(){
       trackEvent('video_export_success', {
         format: extension,
         resolution: effectiveResolution,
+        aspect: effectiveAspect,
         fps,
         bitrateMbps: exportSettings.bitrateMbps,
         durationSec: exportSettings.durationSec,
         fileSizeBytes: blob.size
       });
     } else {
-      if(extension === 'mp4' && effectiveResolution !== 'source'){
+      if(effectiveResolution !== 'source'){
         const retryResolution = getNextLowerVideoResolution(effectiveResolution);
         if(retryResolution !== effectiveResolution){
           const retryLabel = retryResolution === 'source' ? 'Source' : retryResolution.toUpperCase();
@@ -3543,7 +3630,12 @@ function startRecording(){
           const activeBtn = videoResChipButtons.find(btn => (btn.dataset.videoRes || 'source') === retryResolution);
           if(activeBtn) activateChip(videoResChipButtons, activeBtn);
           exportSettings.videoResolution = retryResolution;
-          trackEvent('video_export_fallback', { reason: 'empty_blob_retry', from: effectiveResolution, to: retryResolution });
+          trackEvent('video_export_fallback', {
+            reason: 'empty_blob_retry',
+            from: effectiveResolution,
+            to: retryResolution,
+            aspect: effectiveAspect
+          });
           mediaRecorder = null;
           setRecordingUI(false);
           setTimeout(() => startRecording(), 80);
@@ -3551,7 +3643,12 @@ function startRecording(){
         }
       }
       toast('Recording failed (empty output).');
-      trackEvent('video_export_failed', { reason: 'empty_blob', format: extension, resolution: effectiveResolution });
+      trackEvent('video_export_failed', {
+        reason: 'empty_blob',
+        format: extension,
+        resolution: effectiveResolution,
+        aspect: effectiveAspect
+      });
     }
     if(restoreVideoResolutionCapture){
       restoreVideoResolutionCapture();
